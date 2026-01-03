@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adidas Girls Project - Napatjira</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         /* --- CSS Reset & Variables (Same as index.html) --- */
+         :root{--bg-color:#0a0a0a;--card-bg:#171717;--text-main:#ffffff;--text-secondary:#a1a1a1;--accent:#ffffff;--transition:all 0.3s ease}*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}body{background-color:var(--bg-color);color:var(--text-main);font-family:'Inter',sans-serif;line-height:1.6;font-weight:300}a{text-decoration:none;color:var(--text-main);transition:var(--transition)}ul{list-style:none}.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+         /* Navigation */
+         nav{display:flex;justify-content:space-between;align-items:center;height:60px;padding:0;position:sticky;top:0;background-color:rgba(10,10,10,0.9);backdrop-filter:blur(10px);z-index:100}
+         .logo{font-size:1.2rem;font-weight:700;text-transform:uppercase}.nav-links{display:flex;gap:30px}.nav-links a{font-size:0.95rem;color:var(--text-secondary);font-weight:500}.nav-links a:hover{color:var(--text-main)}.skills-tag{display:flex;flex-wrap:wrap;gap:10px}.tag{background:var(--card-bg);padding:6px 14px;border-radius:4px;font-size:0.85rem;color:var(--text-secondary);border:1px solid #333}.tag:hover{border-color:var(--text-secondary);color:var(--text-main)}footer{padding:40px 0;text-align:center;color:#444;font-size:0.8rem;border-top:1px solid #1a1a1a}
+         
+         /* --- Specific Project Styles --- */
+         .project-header { padding: 80px 0 40px 0; border-bottom: 1px solid #222; margin-bottom: 60px; }
+         .back-link { display: inline-flex; align-items: center; color: var(--text-secondary); margin-bottom: 30px; font-weight: 500; font-size: 0.9rem; }
+         .back-link:hover { color: var(--text-main); }
+         .project-header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 15px; letter-spacing: -1px; line-height: 1.2; }
+         .project-role { color: var(--text-secondary); font-size: 1.1rem; font-weight: 400;}
+
+         /* Layout */
+         .project-content { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; padding-bottom: 80px; }
+         
+         .content-block { margin-bottom: 50px; }
+         .content-block h2 { font-size: 1.3rem; margin-bottom: 20px; font-weight: 600; color: var(--text-main); border-left: 3px solid #fff; padding-left: 15px; }
+         .content-block p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1rem;}
+         
+         .tech-list li { margin-bottom: 15px; color: var(--text-secondary); }
+         .tech-list strong { color: var(--text-main); font-weight: 600; }
+
+         /* Image Container */
+         .project-image-container { 
+             width: 100%; 
+             height: auto; 
+             border-radius: 8px; 
+             overflow: hidden;
+             margin-bottom: 10px;
+             border: 1px solid #333;
+         }
+
+         /* Note Styling */
+         .note-box {
+             padding: 20px;
+             background-color: rgba(255, 255, 255, 0.05);
+             border-radius: 8px;
+             border-left: 3px solid var(--text-secondary);
+             font-size: 0.9rem;
+             color: #ccc;
+             font-style: italic;
+         }
+
+         /* --- Live Button Style --- */
+         .btn-live {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             width: 100%;
+             padding: 12px 0;
+             background-color: transparent;
+             border: 1px solid var(--accent);
+             color: var(--text-main);
+             font-weight: 600;
+             border-radius: 6px;
+             margin-bottom: 30px;
+             transition: var(--transition);
+             gap: 8px;
+         }
+         .btn-live:hover {
+             background-color: var(--accent);
+             color: var(--bg-color);
+         }
+
+         /* --- NEW: Image Modal (Lightbox) CSS --- */
+         .zoomable {
+             cursor: zoom-in; /* เปลี่ยนเมาส์เป็นรูปแว่นขยาย */
+             transition: 0.3s;
+         }
+         .zoomable:hover { opacity: 0.8; }
+
+         .modal {
+             display: none; /* ซ่อนไว้ก่อน */
+             position: fixed;
+             z-index: 1000;
+             padding-top: 50px;
+             left: 0;
+             top: 0;
+             width: 100%;
+             height: 100%;
+             overflow: auto;
+             background-color: rgba(0,0,0,0.9); /* พื้นหลังสีดำโปร่งแสง */
+         }
+
+         .modal-content {
+             margin: auto;
+             display: block;
+             width: 80%;
+             max-width: 1200px; /* จำกัดความกว้างสูงสุด */
+             max-height: 90vh;
+             object-fit: contain;
+         }
+
+         .modal-content, .close {
+             animation-name: zoom;
+             animation-duration: 0.3s;
+         }
+
+         @keyframes zoom {
+             from {transform:scale(0)}
+             to {transform:scale(1)}
+         }
+
+         .close {
+             position: absolute;
+             top: 20px;
+             right: 35px;
+             color: #f1f1f1;
+             font-size: 40px;
+             font-weight: bold;
+             transition: 0.3s;
+             cursor: pointer;
+         }
+
+         .close:hover,
+         .close:focus {
+             color: #bbb;
+             text-decoration: none;
+             cursor: pointer;
+         }
+
+         @media (max-width: 900px) { 
+             .project-content { grid-template-columns: 1fr; gap: 40px; } 
+             .modal-content { width: 100%; }
+         }
+    </style>
+</head>
+<body>
+    <nav class="container">
+        <div class="logo">NAPATJIRA P.</div>
+        <ul class="nav-links">
+            <li><a href="index.html#projects">← Back to Projects</a></li>
+        </ul>
+    </nav>
+
+    <header class="container project-header">
+        <a href="index.html#projects" class="back-link">← Back</a>
+        <h1>Adidas Girls Website</h1>
+        <p class="project-role">2024 | Role: UX/UI Designer, Front-End Development</p>
+    </header>
+
+    <section class="container project-content">
+        
+        <div>
+            <div class="content-block">
+                <div class="project-image-container">
+                    <img src="adidasg-pic.png" alt="Adidas Girls Project Screenshot" class="zoomable" style="width:100%; height:auto; display:block;">
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h2>Concept</h2>
+                <p>Adidas Girls is a specialized e-commerce website exclusively designed for women’s sportswear and equipment. The platform focuses on empowering active women by providing a curated shopping experience that blends high-quality performance gear with modern style.</p>
+            </div>
+
+            <div class="content-block">
+                <h2>Technical Implementation</h2>
+                <ul class="tech-list">
+                    <li><strong>UI/UX Design:</strong> Designed the website's interface and user experience using Figma.</li>
+                    <li><strong>Front-end Development:</strong> Built the website structure and responsive styling using HTML5 and CSS.</li>
+                </ul>
+            </div>
+
+            <div class="content-block">
+                <div class="note-box">
+                    <strong>Note:</strong> This version serves as a functional prototype. Some features are still under development due to project time constraints.
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="content-block" style="position: sticky; top: 100px;">
+                
+                <a href="https://chuubitters.github.io/AdidasGirls/" target="_blank" class="btn-live">
+                    Visit Website ↗
+                </a>
+
+                <h2 style="border:none; padding-left:0;">Tools Used</h2>
+                <div class="skills-tag">
+                    <span class="tag">Figma</span>
+                    <span class="tag">VSCode</span>
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 10px; font-size: 0.9rem;">User Persona</p>
+                     <div class="project-image-container">
+                        <img src="adidasg-persona.png" alt="User Persona" class="zoomable" style="width:100%; height:auto; display:block;">
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem; text-align: center; margin-top: 5px;">(Click image to enlarge)</p>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Napatjira Phiwpan.</p>
+    </footer>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("imageModal");
+        var modalImg = document.getElementById("img01");
+        
+        // Get all images with class="zoomable"
+        var images = document.querySelectorAll('.zoomable');
+
+        // Loop through images and add click event
+        images.forEach(function(img) {
+            img.onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Also close if clicked outside the image
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
